@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Recent Queue</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body data-page="recent">
+  <main class="screen">
+    <section class="topbar">
+      <a href="/index.html">← Menu</a>
+      <span id="sync-status">Ready</span>
+    </section>
+    <section class="card recent-card">
+      <p class="eyebrow">Local device</p>
+      <h1>Recent / queue</h1>
+      <button class="submit-button" id="sync-now">SYNC NOW</button>
+      <button class="submit-button danger" id="clear-local">CLEAR LOCAL QUEUE</button>
+      <div id="recent-list" class="recent-list"></div>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

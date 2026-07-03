@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Settings</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body data-page="settings">
+  <main class="screen">
+    <section class="topbar">
+      <a href="/index.html">← Menu</a>
+      <span id="sync-status">Ready</span>
+    </section>
+    <section class="card">
+      <p class="eyebrow">Settings</p>
+      <h1>Google Sheets connection</h1>
+      <label class="label" for="endpoint">Apps Script Web App URL ending /exec</label>
+      <textarea id="endpoint" class="endpoint-input" rows="4" placeholder="https://script.google.com/macros/s/.../exec"></textarea>
+      <button class="submit-button" id="save-settings">SAVE SETTINGS</button>
+      <button class="submit-button grey" id="test-connection">TEST CONNECTION</button>
+      <button class="submit-button danger" id="clear-local">CLEAR LOCAL QUEUE</button>
+      <p class="status-message" id="message">Paste the /exec URL once on each device.</p>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
