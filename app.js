@@ -182,10 +182,13 @@ async function syncQueue() {
 
   const queue = getQueue();
 
-  const pending = queue.filter(item =>
-    item.status === 'pending' ||
-    item.status === 'failed'
-  );
+  const pending = queue
+  .filter(item => item.status === 'pending' || item.status === 'failed')
+  .sort((a, b) => {
+    const timeA = new Date(a.payload?.timestamp || a.createdAt).getTime();
+    const timeB = new Date(b.payload?.timestamp || b.createdAt).getTime();
+    return timeA - timeB;
+  });
 
   for (const item of pending) {
     updateQueueItem(item.id, {
