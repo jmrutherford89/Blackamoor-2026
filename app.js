@@ -166,6 +166,21 @@ function syncQueueSoon() {
   );
 }
 
+function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
+  const controller = new AbortController();
+
+  const timeout = window.setTimeout(() => {
+    controller.abort();
+  }, timeoutMs);
+
+  return fetch(url, {
+    ...options,
+    signal: controller.signal
+  }).finally(() => {
+    window.clearTimeout(timeout);
+  });
+}
+
 async function syncQueue() {
   if (state.syncing) {
     return;
@@ -180,56 +195,72 @@ async function syncQueue() {
 
   state.syncing = true;
 
-  const queue = getQueue();
+  try {
+    const queue = getQueue();
 
-  const pending = queue
-  .filter(item => item.status === 'pending' || item.status === 'failed')
-  .sort((a, b) => {
-    const timeA = new Date(a.payload?.timestamp || a.createdAt).getTime();
-    const timeB = new Date(b.payload?.timestamp || b.createdAt).getTime();
-    return timeA - timeB;
-  });
+    const pending = queue
+      .filter(item =>
+        item.status === 'pending' ||
+        item.status === 'failed'
+      )
+      .sort((a, b) => {
+        const timeA = new Date(
+          a.payload?.timestamp || a.createdAt
+        ).getTime();
 
-  for (const item of pending) {
-    updateQueueItem(item.id, {
-      status: 'syncing',
-      attempts: (item.attempts || 0) + 1
-    });
+        const timeB = new Date(
+          b.payload?.timestamp || b.createdAt
+        ).getTime();
 
-    try {
-      /*
-      no-cors avoids browser CORS blocking with Apps Script.
+        return timeA - timeB;
+      })
+      .slice(0, 5);
 
-      Because no-cors responses cannot be read by JavaScript,
-      "uploaded" means the browser successfully sent the request.
-      */
-      await fetch(endpoint, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8'
-        },
-        body: JSON.stringify(item.payload)
-      });
-
+    for (const item of pending) {
       updateQueueItem(item.id, {
-        status: 'uploaded',
-        uploadedAt: nowIso()
-      });
-    } catch (error) {
-      updateQueueItem(item.id, {
-        status: 'failed',
-        error: String(error)
+        status: 'syncing',
+        attempts: (item.attempts || 0) + 1
       });
 
-      break;
+      try {
+        await fetchWithTimeout(endpoint, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(item.payload)
+        }, 8000);
+
+        updateQueueItem(item.id, {
+          status: 'uploaded',
+          uploadedAt: nowIso()
+        });
+
+      } catch (error) {
+        updateQueueItem(item.id, {
+          status: 'failed',
+          error: String(error)
+        });
+
+        break;
+      }
+    }
+
+  } finally {
+    state.syncing = false;
+    updateSyncStatus();
+
+    const remaining = getQueue().some(item =>
+      item.status === 'pending' ||
+      item.status === 'failed'
+    );
+
+    if (remaining) {
+      window.setTimeout(syncQueueSoon, 1500);
     }
   }
-
-  state.syncing = false;
-  updateSyncStatus();
 }
-
 function clearUploadedOlderThan(limit = 100) {
   const queue = getQueue();
   const keep = [];
@@ -658,6 +689,12 @@ if (page === 'recent') {
     syncQueueSoon
   );
 }
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    syncQueueSoon();
+  }
+});
 
 document.addEventListener(
   'DOMContentLoaded',
