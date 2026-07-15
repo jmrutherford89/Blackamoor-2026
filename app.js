@@ -237,7 +237,7 @@ async function syncQueue() {
   ...item.payload,
   clientId: item.payload?.clientId || item.id
 })
-        }, 8000);
+        }, 15000);
 
         updateQueueItem(item.id, {
           status: 'uploaded',
