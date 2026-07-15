@@ -626,6 +626,10 @@ function setupStartPage() {
 function init() {
   const page = document.body.dataset.page;
 
+  if (page === 'start') {
+  setupStartPage();
+}
+
   if (page === 'checkpoint') {
     setupCheckpointPage();
   }
