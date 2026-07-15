@@ -592,7 +592,6 @@ function clearLocalData() {
   );
 }
 
-
 function setupStartPage() {
   renderRecent();
   updateSyncStatus();
@@ -626,29 +625,29 @@ function setupStartPage() {
 function init() {
   const page = document.body.dataset.page;
 
-  if (page === 'start') {
+if (page === 'checkpoint') {
+  setupCheckpointPage();
+}
+
+if (page === 'timer') {
+  setupTimerPage();
+}
+
+if (page === 'finish') {
+  setupFinishPage();
+}
+
+if (page === 'start') {
   setupStartPage();
 }
 
-  if (page === 'checkpoint') {
-    setupCheckpointPage();
-  }
+if (page === 'settings') {
+  setupSettingsPage();
+}
 
-  if (page === 'timer') {
-    setupTimerPage();
-  }
-
-  if (page === 'finish') {
-    setupFinishPage();
-  }
-
-  if (page === 'settings') {
-    setupSettingsPage();
-  }
-
-  if (page === 'recent') {
-    setupRecentPage();
-  }
+if (page === 'recent') {
+  setupRecentPage();
+}
 
   clearUploadedOlderThan(100);
   syncQueueSoon();
