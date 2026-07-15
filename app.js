@@ -387,36 +387,41 @@ function setupCheckpointPage() {
   renderRecent();
   updateSyncStatus();
 
-  document
-    .getElementById('submit-button')
-    ?.addEventListener('click', () => {
-      const bib = state.currentInput.trim();
+  document.getElementById('submit-button')?.addEventListener('click', () => {
+  const rawInput = state.currentInput.trim();
+  const uncertain = rawInput.endsWith('?');
+  const bibNumber = rawInput.replace(/\?/g, '').trim();
 
-      if (!bib) {
-        return setMessage(
-          'Enter bib number first',
-          'warn'
-        );
-      }
+  if (!bibNumber) {
+    return setMessage('Enter bib number first', 'warn');
+  }
 
-      const timestamp = nowIso();
+  const submittedBib = uncertain
+    ? `${bibNumber}?`
+    : bibNumber;
 
-      enqueue({
-        type: 'checkpoint',
-        location,
-        bib,
-        timestamp,
-        clockTime: clockTimeFromIso(timestamp)
-      }, `${location} checkpoint`);
+  const timestamp = nowIso();
 
-      state.currentInput = '';
-      updateDisplay();
+  enqueue({
+    type: 'checkpoint',
+    location,
+    bib: submittedBib,
+    bibNumber,
+    uncertain,
+    timestamp,
+    clockTime: clockTimeFromIso(timestamp)
+  }, uncertain ? `${location} uncertain checkpoint` : `${location} checkpoint`);
 
-      setMessage(
-        `✓ ${bib} queued`,
-        'good'
-      );
-    });
+  state.currentInput = '';
+  updateDisplay();
+
+  setMessage(
+    uncertain
+      ? `✓ ${submittedBib} queued as uncertain`
+      : `✓ ${submittedBib} queued`,
+    uncertain ? 'warn' : 'good'
+  );
+});
 }
 
 function setupTimerPage() {
