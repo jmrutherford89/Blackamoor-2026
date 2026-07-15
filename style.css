@@ -47,3 +47,24 @@ h2 { margin: 0 0 12px; font-size: 20px; }
 .badge.failed { background: #7f1d1d; color: #fecaca; }
 .label { display: block; color: var(--muted); font-weight: 800; margin: 12px 0 8px; }
 .endpoint-input { width: 100%; background: #020617; color: white; border: 1px solid #334155; border-radius: 14px; padding: 14px; font-size: 15px; margin-bottom: 12px; }
+.start-race-button {
+  width: 100%;
+  min-height: 120px;
+  margin: 24px 0;
+  padding: 28px 20px;
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: #dc2626;
+  color: #ffffff;
+  border: none;
+  border-radius: 18px;
+  box-shadow: 0 8px 0 #7f1d1d;
+}
+
+.start-race-button:active {
+  transform: translateY(4px);
+  box-shadow: 0 4px 0 #7f1d1d;
+  background: #b91c1c;
+}
