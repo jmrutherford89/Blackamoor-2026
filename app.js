@@ -94,18 +94,22 @@ function addRecent(entry) {
 }
 
 function enqueue(payload, label) {
+  const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
   const item = {
-    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    id,
     status: 'pending',
     label,
-    payload,
+    payload: {
+      ...payload,
+      clientId: id
+    },
     createdAt: nowIso(),
     attempts: 0
   };
 
   const queue = getQueue();
   queue.unshift(item);
-
   saveQueue(queue);
   addRecent(item);
   syncQueueSoon();
@@ -229,7 +233,10 @@ async function syncQueue() {
           headers: {
             'Content-Type': 'text/plain;charset=utf-8'
           },
-          body: JSON.stringify(item.payload)
+          body: JSON.stringify({
+  ...item.payload,
+  clientId: item.payload?.clientId || item.id
+})
         }, 8000);
 
         updateQueueItem(item.id, {
