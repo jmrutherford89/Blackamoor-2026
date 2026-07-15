@@ -383,7 +383,7 @@ function setupCheckpointPage() {
     title.textContent = location;
   }
 
-  buildKeypad();
+  buildKeypad({ allowUncertain: true });
   renderRecent();
   updateSyncStatus();
 
