@@ -592,6 +592,37 @@ function clearLocalData() {
   );
 }
 
+
+function setupStartPage() {
+  renderRecent();
+  updateSyncStatus();
+
+  document
+    .getElementById('start-race-button')
+    ?.addEventListener('click', () => {
+      const confirmed = confirm(
+        'Start the race now? This will set the official race start time in the spreadsheet.'
+      );
+
+      if (!confirmed) {
+        return;
+      }
+
+      const timestamp = nowIso();
+
+      enqueue({
+        type: 'race-start',
+        timestamp,
+        clockTime: clockTimeFromIso(timestamp)
+      }, 'Race start');
+
+      setMessage(
+        `✓ race start queued ${clockTimeFromIso(timestamp)}`,
+        'good'
+      );
+    });
+}
+
 function init() {
   const page = document.body.dataset.page;
 
