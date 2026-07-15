@@ -596,31 +596,32 @@ function setupStartPage() {
   renderRecent();
   updateSyncStatus();
 
-  document
-    .getElementById('start-race-button')
-    ?.addEventListener('click', () => {
-      const confirmed = confirm(
-        'Start the race now? This will set the official race start time in the spreadsheet.'
-      );
+  const startButton = document.getElementById('start-race-button');
 
-      if (!confirmed) {
-        return;
-      }
+  startButton?.addEventListener('click', () => {
+    /*
+    Capture the race start time immediately on the button press.
+    Do not show a confirmation first, because that delays the timestamp.
+    */
+    const timestamp = nowIso();
+    const clockTime = clockTimeFromIso(timestamp);
 
-      const timestamp = nowIso();
+    enqueue({
+      type: 'race-start',
+      timestamp,
+      clockTime
+    }, 'Race start');
 
-      enqueue({
-        type: 'race-start',
-        timestamp,
-        clockTime: clockTimeFromIso(timestamp)
-      }, 'Race start');
+    startButton.disabled = true;
+    startButton.textContent = 'RACE STARTED';
 
-      setMessage(
-        `✓ race start queued ${clockTimeFromIso(timestamp)}`,
-        'good'
-      );
-    });
+    setMessage(
+      `✓ official start time recorded: ${clockTime}`,
+      'good'
+    );
+  });
 }
+   
 
 function init() {
   const page = document.body.dataset.page;
