@@ -313,41 +313,43 @@ function escapeHtml(value) {
   );
 }
 
-function buildKeypad() {
+function buildKeypad(options = {}) {
   const keypad = document.getElementById('keypad');
+  if (!keypad) return;
 
-  if (!keypad) {
-    return;
-  }
+  const allowUncertain = options.allowUncertain === true;
 
-  const keys = [
-    '7', '8', '9',
-    '4', '5', '6',
-    '1', '2', '3',
-    '⌫', '0', 'CLEAR'
-  ];
+  const keys = allowUncertain
+    ? ['7','8','9','4','5','6','1','2','3','?','0','⌫','CLEAR']
+    : ['7','8','9','4','5','6','1','2','3','⌫','0','CLEAR'];
 
-  keypad.innerHTML = keys.map(key =>
-    `<button class="key" data-key="${key}">${key}</button>`
+  keypad.innerHTML = keys.map(k =>
+    `<button class="key ${k === '?' ? 'uncertain-key' : ''}" data-key="${k}">${k}</button>`
   ).join('');
 
   keypad.addEventListener('click', event => {
-    const button =
-      event.target.closest('button[data-key]');
-
-    if (!button) {
-      return;
-    }
+    const button = event.target.closest('button[data-key]');
+    if (!button) return;
 
     const key = button.dataset.key;
 
     if (/^\d$/.test(key)) {
+      state.currentInput = state.currentInput.replace('?', '');
       state.currentInput += key;
     }
 
+    if (key === '?') {
+      if (!state.currentInput) return;
+
+      if (state.currentInput.endsWith('?')) {
+        state.currentInput = state.currentInput.slice(0, -1);
+      } else {
+        state.currentInput = state.currentInput.replace('?', '') + '?';
+      }
+    }
+
     if (key === '⌫') {
-      state.currentInput =
-        state.currentInput.slice(0, -1);
+      state.currentInput = state.currentInput.slice(0, -1);
     }
 
     if (key === 'CLEAR') {
