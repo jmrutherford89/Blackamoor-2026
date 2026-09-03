@@ -1,0 +1,17 @@
+EXTERMINATOR 2026 SETUP
+
+1. Make a COPY of the working Blackamoor spreadsheet.
+2. In that copy, duplicate the existing Blackamoor checkpoint sheet three times.
+3. Rename the three copies EXACTLY:
+   Stanage
+   Mitchells field
+   Longshaw
+4. Keep the original Blackamoor sheet until testing is complete; it can then be hidden/deleted.
+5. Replace the Apps Script code with Exterminator_Apps_Script.js supplied alongside this project.
+6. Deploy Apps Script as a NEW web app deployment and copy its /exec URL.
+7. Put that URL into app.js as DEFAULT_ENDPOINT, OR paste it once per device on the Settings screen.
+8. Deploy this project to a NEW Vercel project/domain while testing.
+9. Test one bib through Start -> Stanage -> Mitchells field -> Longshaw -> Finish.
+10. Confirm the same bib appears independently in all three checkpoint sheets.
+
+IMPORTANT: This app deliberately uses new localStorage keys (exterminator_*) and contains no Blackamoor Apps Script endpoint, preventing accidental writes to the old race spreadsheet.

@@ -1,10 +1,9 @@
-const DEFAULT_ENDPOINT =
-  'https://script.google.com/macros/s/AKfycbywKuHtyE9Q6twPYjRftw1PIt_IA80QEXNY6PRN19kWbCNWs7XoliWZTTo1V2mbMQKY8w/exec';
+const DEFAULT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz-PjKzXXwMFY8vtrK1ewweqlv6ot3eIDmkcyUvvnHsMwqDPmA4OffZFN32Nu2T5v6k/exec'; // Exterminator Apps Script endpoint.
 
 const STORAGE_KEYS = {
-  endpoint: 'blackamoor_endpoint_url',
-  queue: 'blackamoor_upload_queue',
-  recent: 'blackamoor_recent_entries'
+  endpoint: 'exterminator_endpoint_url',
+  queue: 'exterminator_upload_queue',
+  recent: 'exterminator_recent_entries'
 };
 
 const state = {
@@ -25,8 +24,8 @@ function clockTimeFromIso(iso) {
 /*
 Uses an endpoint saved through the Settings page if one exists.
 
-Otherwise, it automatically uses the permanent Blackamoor
-Apps Script URL above.
+Otherwise, it uses DEFAULT_ENDPOINT above if you paste the new
+Exterminator Apps Script URL into app.js after deployment.
 */
 function getEndpoint() {
   return (
@@ -411,8 +410,21 @@ function setupCheckpointPage() {
   const params =
     new URLSearchParams(window.location.search);
 
-  const location =
-    params.get('location') || 'Blackamoor';
+  const checkpointKey = (params.get('checkpoint') || '').toLowerCase();
+
+  const checkpoints = {
+    stanage: 'Stanage',
+    mitchells: 'Mitchells field',
+    longshaw: 'Longshaw'
+  };
+
+  const location = checkpoints[checkpointKey];
+
+  if (!location) {
+    setMessage('Invalid checkpoint. Return to the menu.', 'bad');
+    document.getElementById('submit-button')?.setAttribute('disabled', 'disabled');
+    return;
+  }
 
   const title =
     document.getElementById('screen-title');
