@@ -15,3 +15,8 @@ EXTERMINATOR 2026 SETUP
 10. Confirm the same bib appears independently in all three checkpoint sheets.
 
 IMPORTANT: This app deliberately uses new localStorage keys (exterminator_*) and contains no Blackamoor Apps Script endpoint, preventing accidental writes to the old race spreadsheet.
+
+FINISH PROCESS
+--------------
+The finish page now records bib + position + finish time in one submission.
+There is no separate finish timer page.

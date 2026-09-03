@@ -474,28 +474,6 @@ function setupCheckpointPage() {
 });
 }
 
-function setupTimerPage() {
-  renderRecent();
-  updateSyncStatus();
-
-  document
-    .getElementById('finish-button')
-    ?.addEventListener('click', () => {
-      const timestamp = nowIso();
-
-      enqueue({
-        type: 'finish-timer',
-        timestamp,
-        clockTime: clockTimeFromIso(timestamp)
-      }, 'Finish time');
-
-      setMessage(
-        `✓ finish time queued ${clockTimeFromIso(timestamp)}`,
-        'good'
-      );
-    });
-}
-
 function setupFinishPage() {
   buildKeypad();
   renderRecent();
@@ -520,7 +498,7 @@ function setupFinishPage() {
         bib,
         timestamp,
         clockTime: clockTimeFromIso(timestamp)
-      }, 'Finish recorder');
+      }, 'Finish');
 
       state.currentInput = '';
       updateDisplay();
@@ -678,10 +656,6 @@ function init() {
 
 if (page === 'checkpoint') {
   setupCheckpointPage();
-}
-
-if (page === 'timer') {
-  setupTimerPage();
 }
 
 if (page === 'finish') {
