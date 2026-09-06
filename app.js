@@ -1,4 +1,4 @@
-const DEFAULT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz-PjKzXXwMFY8vtrK1ewweqlv6ot3eIDmkcyUvvnHsMwqDPmA4OffZFN32Nu2T5v6k/exec'; // Exterminator Apps Script endpoint.
+const DEFAULT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxAfoZorNI-jPGfCekKJsFrIenhLk1auFHn-xRrvDrR0uSnd1IIemmmNo0AWqBAfxZR/exec'; // Exterminator Apps Script endpoint.
 
 const STORAGE_KEYS = {
   endpoint: 'exterminator_endpoint_url',
